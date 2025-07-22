@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+enum ChartTimeRange: String, CaseIterable {
+    case day7 = "7d"
+    case month1 = "1m"
+    case year1 = "1y"
+}
+
 struct ChartView: View {
     @StateObject var viewModel: DetailViewModel
     
@@ -17,6 +23,7 @@ struct ChartView: View {
    private let startingDate: Date
    private let endingDate: Date
     @State private var percentage: CGFloat = 0
+    @State private var selectedRange: ChartTimeRange = .day7
     
     init(coin: Coin) {
         _viewModel = StateObject(wrappedValue: DetailViewModel(coin: coin))
@@ -33,6 +40,27 @@ struct ChartView: View {
     
     var body: some View {
         VStack {
+                    // Add this HStack for time range selector
+            HStack(spacing: 16) {
+                ForEach(ChartTimeRange.allCases, id: \.self) { range in
+                    Button(action: {
+                        selectedRange = range
+                    }) {
+                        Text(range.rawValue)
+                            .font(.caption)
+                            .fontWeight(selectedRange == range ? .bold : .regular)
+                            .foregroundColor(selectedRange == range ? .white : .gray)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(
+                                Capsule()
+                                    .fill(selectedRange == range ? Color.blue : Color.gray.opacity(0.2))
+                            )
+                    }
+                }
+            }
+            .padding(.bottom, 8)
+        
             chartView
             .frame(height: 200)
             .background(chartBackground)
