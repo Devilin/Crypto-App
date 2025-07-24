@@ -179,8 +179,8 @@ extension ChartView {
     }
 }
 
-struct ChartView_Previews: PreviewProvider {
-    static var previews: some View {
-        ChartView(coin: dev.coin)
-    }
-}
+// struct ChartView_Previews: PreviewProvider {
+//     static var previews: some View {
+//         ChartView(coin: dev.coin)
+//     }
+// }
