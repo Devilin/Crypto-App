@@ -7,6 +7,11 @@
 
 import Foundation
 
+// Add this at the top of the file (after imports, before the class)
+private struct HistoricalDataResponse: Codable {
+    let prices: [[Double]]  // [[timestamp, price], ...]
+}
+
 class CoinDetailDataService {
     
     let coin: Coin
@@ -64,5 +69,15 @@ extension CoinDetailDataService {
                 completion(.failure(.jsonParsingFailure))
             }
         }.resume()
+    }
+
+    // Add this function inside the CoinDetailDataService class
+    func fetchHistoricalData(days: Int) async throws -> [Double] {
+        let urlString = "https://api.coingecko.com/api/v3/coins/\(coin.id)/market_chart?vs_currency=usd&days=\(days)"
+        guard let url = URL(string: urlString) else { throw URLError(.badURL) }
+        
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let result = try JSONDecoder().decode(HistoricalDataResponse.self, from: data)
+        return result.prices.map { $0[1] } // Extract just the prices
     }
 }
