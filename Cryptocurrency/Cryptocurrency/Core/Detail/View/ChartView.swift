@@ -34,8 +34,8 @@ struct ChartView: View {
         let priceChange = (data.last ?? 0) - (data.first ?? 0)
         lineColor = priceChange > 0 ? Color.theme.green : Color.theme.red
         
-        endingDate = Date(coinGeckoString: coin.lastUpdated ?? "")
-        startingDate = endingDate.addingTimeInterval(-7*24*60*60)
+        endingDate = Date(coinGeckoString: coin.lastUpdated ?? "") ?? Date()
+        startingDate = endingDate.addingTimeInterval(-365*24*60*60) // Changed from -7 to -365 days
     }
     
     var body: some View {
