@@ -71,17 +71,13 @@ extension CoinDetailDataService {
         }.resume()
     }
 
-    // MARK: - Test Function
-    func testHistoricalData() async {
-        do {
-            let historicalData = try await getHistoricalData()
-            print("Successfully fetched \(historicalData.prices.count) data points")
-            if let first = historicalData.prices.first, let last = historicalData.prices.last {
-                print("First point: \(first.date) - $\(first.price)")
-                print("Last point: \(last.date) - $\(last.price)")
-            }
-        } catch {
-            print("Test failed: \(error.localizedDescription)")
-        }
+    func fetchHistoricalData(days: Int) async throws -> [Double] {
+        let urlString = "https://api.coingecko.com/api/v3/coins/\(coin.id)/market_chart?vs_currency=usd&days=\(days)"
+        guard let url = URL(string: urlString) else { throw URLError(.badURL) }
+
+        let (data, _) = try await URLSession.shared.data(from: url)
+        let result = try JSONDecoder().decode(HistoricalDataResponse.self, from: data)
+        return result.prices.map { $0[1] } // extract only prices
     }
+    
 }
