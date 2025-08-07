@@ -24,7 +24,6 @@ struct ChartView: View {
    private let endingDate: Date
     @State private var percentage: CGFloat = 0
     @State private var selectedRange: ChartTimeRange = .day7
-    
     init(coin: Coin) {
         _viewModel = StateObject(wrappedValue: DetailViewModel(coin: coin))
         data = coin.sparklineIn7D?.price ?? []
