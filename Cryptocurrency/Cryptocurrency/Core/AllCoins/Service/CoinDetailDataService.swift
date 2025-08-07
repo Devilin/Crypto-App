@@ -76,8 +76,35 @@ extension CoinDetailDataService {
         guard let url = URL(string: urlString) else { throw URLError(.badURL) }
 
         let (data, _) = try await URLSession.shared.data(from: url)
-        let result = try JSONDecoder().decode(HistoricalDataResponse.self, from: data)
-        return result.prices.map { $0[1] } // extract only prices
+        // Optional: check status code for better errors
+        if let http = response as? HTTPURLResponse, http.statusCode != 200 {
+            let body = String(data: data, encoding: .utf8) ?? "<non-utf8>"
+            print("DEBUG: HTTP \(http.statusCode). Body: \(body.prefix(500))")
+            throw URLError(.badServerResponse)
+        }
+
+        do {
+            // First, try Codable
+            let result = try JSONDecoder().decode(HistoricalDataResponse.self, from: data)
+            return result.prices.compactMap { $0.count > 1 ? $0[1] : nil }
+        } catch {
+            // Fallback: parse with JSONSerialization and be lenient
+            if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+            let prices = json["prices"] as? [[Any]] {
+                let values: [Double] = prices.compactMap { arr in
+                    guard arr.count > 1 else { return nil }
+                    if let d = arr[1] as? Double { return d }
+                    if let n = arr[1] as? NSNumber { return n.doubleValue }
+                    if let s = arr[1] as? String { return Double(s) }
+                    return nil
+                }
+                return values
+            }
+
+            let body = String(data: data, encoding: .utf-8) ?? "<non-utf8>"
+            print("DEBUG: Decode failed: \(error). Body: \(body.prefix(500))")
+            throw error
+        }
     }
-    
+
 }
