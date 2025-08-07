@@ -75,7 +75,7 @@ extension CoinDetailDataService {
         let urlString = "https://api.coingecko.com/api/v3/coins/\(coin.id)/market_chart?vs_currency=usd&days=\(days)"
         guard let url = URL(string: urlString) else { throw URLError(.badURL) }
 
-        let (data, _) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await URLSession.shared.data(from: url)
         // Optional: check status code for better errors
         if let http = response as? HTTPURLResponse, http.statusCode != 200 {
             let body = String(data: data, encoding: .utf8) ?? "<non-utf8>"
@@ -101,7 +101,7 @@ extension CoinDetailDataService {
                 return values
             }
 
-            let body = String(data: data, encoding: .utf-8) ?? "<non-utf8>"
+            let body = String(data: data, encoding: .utf8) ?? "<non-utf8>"
             print("DEBUG: Decode failed: \(error). Body: \(body.prefix(500))")
             throw error
         }
