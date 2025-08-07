@@ -18,6 +18,8 @@ class DetailViewModel: ObservableObject {
     @Published var coinDescription: String? = nil
     @Published var websiteURL: String? = nil
     @Published var redditURL: String? = nil
+
+    @Published var monthlyData: [Double] = []
     
     init(coin: Coin) {
         self.coin = coin
@@ -93,6 +95,14 @@ class DetailViewModel: ObservableObject {
                     self?.errorMessage = error.localizedDescription
                 }
             }
+        }
+    }
+
+    func loadMonthlyData() async {
+        do {
+            monthlyData = try await coinDetailService.fetchHistoricalData(days: 30)
+        } catch {
+            print("Error loading monthly data: \(error)")
         }
     }
 }

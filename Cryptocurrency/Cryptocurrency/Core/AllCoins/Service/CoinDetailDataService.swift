@@ -7,6 +7,11 @@
 
 import Foundation
 
+// Add this at the top of the file (after imports, before the class)
+private struct HistoricalDataResponse: Codable {
+    let prices: [[Double]]  // [[timestamp, price], ...]
+}
+
 class CoinDetailDataService {
     
     let coin: Coin
