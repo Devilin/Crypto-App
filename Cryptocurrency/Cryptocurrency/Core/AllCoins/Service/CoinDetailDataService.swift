@@ -65,4 +65,18 @@ extension CoinDetailDataService {
             }
         }.resume()
     }
+
+    // MARK: - Test Function
+    func testHistoricalData() async {
+        do {
+            let historicalData = try await getHistoricalData()
+            print("Successfully fetched \(historicalData.prices.count) data points")
+            if let first = historicalData.prices.first, let last = historicalData.prices.last {
+                print("First point: \(first.date) - $\(first.price)")
+                print("Last point: \(last.date) - $\(last.price)")
+            }
+        } catch {
+            print("Test failed: \(error.localizedDescription)")
+        }
+    }
 }
