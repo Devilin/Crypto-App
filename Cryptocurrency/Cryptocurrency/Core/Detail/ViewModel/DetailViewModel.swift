@@ -20,6 +20,7 @@ class DetailViewModel: ObservableObject {
     @Published var redditURL: String? = nil
 
     @Published var monthlyData: [Double] = []
+    @Published var yearlyData: [Double] = []
     
     init(coin: Coin) {
         self.coin = coin
@@ -103,6 +104,14 @@ class DetailViewModel: ObservableObject {
             monthlyData = try await coinDetailService.fetchHistoricalData(days: 30)
         } catch {
             print("Error loading monthly data: \(error)")
+        }
+    }
+    
+    func loadYearlyData() async {
+        do {
+            yearlyData = try await coinDetailService.fetchHistoricalData(days: 365)
+        } catch {
+            print("Error loading yearly data: \(error)")
         }
     }
 }

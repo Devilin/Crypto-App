@@ -19,10 +19,14 @@ struct ChartView: View {
     @State private var selectedRange: ChartTimeRange = .day7
     
     private var data: [Double] {
-        if selectedRange == .month1 && !viewModel.monthlyData.isEmpty {
-            return viewModel.monthlyData
+        switch selectedRange {
+        case .day7:
+            return viewModel.coin.sparklineIn7D?.price ?? []
+        case .month1:
+            return viewModel.monthlyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.monthlyData
+        case .year1:
+            return viewModel.yearlyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.yearlyData
         }
-        return viewModel.coin.sparklineIn7D?.price ?? []
     }
     
     private var maxY: Double {
@@ -71,10 +75,18 @@ struct ChartView: View {
                 ForEach(ChartTimeRange.allCases, id: \.self) { range in
                     Button(action: {
                         selectedRange = range
-                        if range == .month1 {
+                        switch range {
+                        case .month1:
                             Task {
                                 await viewModel.loadMonthlyData()
                             }
+                        case .year1:
+                            Task {
+                                await viewModel.loadYearlyData()
+                            }
+                        case .day7:
+                            // Uses existing sparkline data, no API call needed
+                            break
                         }
                     }) {
                         Text(range.rawValue)
