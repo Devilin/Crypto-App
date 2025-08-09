@@ -8,24 +8,33 @@
 import SwiftUI
 
 enum ChartTimeRange: String, CaseIterable {
-    case day7 = "7d"
+    case day1 = "1d"
+    case week1 = "1w"
     case month1 = "1m"
+    case month6 = "6m"
     case year1 = "1y"
+    case all = "All"
 }
 
 struct ChartView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var percentage: CGFloat = 0
-    @State private var selectedRange: ChartTimeRange = .day7
+    @State private var selectedRange: ChartTimeRange = .day1
     
     private var data: [Double] {
         switch selectedRange {
-        case .day7:
-            return viewModel.coin.sparklineIn7D?.price ?? []
+        case .day1:
+            return viewModel.dailyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.dailyData
+        case .week1:
+            return viewModel.weeklyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.weeklyData
         case .month1:
             return viewModel.monthlyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.monthlyData
+        case .month6:
+            return viewModel.sixMonthData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.sixMonthData
         case .year1:
             return viewModel.yearlyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.yearlyData
+        case .all:
+            return viewModel.allTimeData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.allTimeData
         }
     }
     
@@ -46,12 +55,18 @@ struct ChartView: View {
         let end = Date(coinGeckoString: viewModel.coin.lastUpdated ?? "") ?? Date()
         let start: Date
         switch selectedRange {
-        case .day7:
+        case .day1:
+            start = end.addingTimeInterval(-1*24*60*60)
+        case .week1:
             start = end.addingTimeInterval(-7*24*60*60)
         case .month1:
             start = end.addingTimeInterval(-30*24*60*60)
+        case .month6:
+            start = end.addingTimeInterval(-180*24*60*60)
         case .year1:
             start = end.addingTimeInterval(-365*24*60*60)
+        case .all:
+            start = end.addingTimeInterval(-3650*24*60*60) // ~10 years
         }
         return (start, end)
     }
@@ -76,17 +91,30 @@ struct ChartView: View {
                     Button(action: {
                         selectedRange = range
                         switch range {
+                        case .day1:
+                            Task {
+                                await viewModel.loadDailyData()
+                            }
+                        case .week1:
+                            Task {
+                                await viewModel.loadWeeklyData()
+                            }
                         case .month1:
                             Task {
                                 await viewModel.loadMonthlyData()
+                            }
+                        case .month6:
+                            Task {
+                                await viewModel.loadSixMonthData()
                             }
                         case .year1:
                             Task {
                                 await viewModel.loadYearlyData()
                             }
-                        case .day7:
-                            // Uses existing sparkline data, no API call needed
-                            break
+                        case .all:
+                            Task {
+                                await viewModel.loadAllTimeData()
+                            }
                         }
                     }) {
                         Text(range.rawValue)

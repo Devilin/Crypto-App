@@ -19,8 +19,12 @@ class DetailViewModel: ObservableObject {
     @Published var websiteURL: String? = nil
     @Published var redditURL: String? = nil
 
+    @Published var dailyData: [Double] = []
+    @Published var weeklyData: [Double] = []
     @Published var monthlyData: [Double] = []
+    @Published var sixMonthData: [Double] = []
     @Published var yearlyData: [Double] = []
+    @Published var allTimeData: [Double] = []
     
     init(coin: Coin) {
         self.coin = coin
@@ -99,6 +103,22 @@ class DetailViewModel: ObservableObject {
         }
     }
 
+    func loadDailyData() async {
+        do {
+            dailyData = try await coinDetailService.fetchHistoricalData(days: 1)
+        } catch {
+            print("Error loading daily data: \(error)")
+        }
+    }
+    
+    func loadWeeklyData() async {
+        do {
+            weeklyData = try await coinDetailService.fetchHistoricalData(days: 7)
+        } catch {
+            print("Error loading weekly data: \(error)")
+        }
+    }
+    
     func loadMonthlyData() async {
         do {
             monthlyData = try await coinDetailService.fetchHistoricalData(days: 30)
@@ -107,11 +127,28 @@ class DetailViewModel: ObservableObject {
         }
     }
     
+    func loadSixMonthData() async {
+        do {
+            sixMonthData = try await coinDetailService.fetchHistoricalData(days: 180)
+        } catch {
+            print("Error loading six month data: \(error)")
+        }
+    }
+    
     func loadYearlyData() async {
         do {
             yearlyData = try await coinDetailService.fetchHistoricalData(days: 365)
         } catch {
             print("Error loading yearly data: \(error)")
+        }
+    }
+    
+    func loadAllTimeData() async {
+        do {
+            // CoinGecko supports max parameter for all-time data
+            allTimeData = try await coinDetailService.fetchHistoricalData(days: 3650) // ~10 years
+        } catch {
+            print("Error loading all-time data: \(error)")
         }
     }
 }
