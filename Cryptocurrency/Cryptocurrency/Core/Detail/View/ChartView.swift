@@ -19,7 +19,7 @@ enum ChartTimeRange: String, CaseIterable {
 struct ChartView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var percentage: CGFloat = 0
-    @State private var selectedRange: ChartTimeRange = .day1
+    @State private var selectedRange: ChartTimeRange = .week1
     
     private var data: [Double] {
         switch selectedRange {
