@@ -33,7 +33,9 @@ struct ChartView: View {
         case .month3:
             return viewModel.threeMonthData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.threeMonthData
         case .month6:
-            return viewModel.sixMonthData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.sixMonthData
+            let sixMonthData = viewModel.sixMonthData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.sixMonthData
+            print("DEBUG: 6m data - isEmpty: \(viewModel.sixMonthData.isEmpty), count: \(sixMonthData.count)")
+            return sixMonthData
         case .year1:
             return viewModel.yearlyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.yearlyData
         case .all:

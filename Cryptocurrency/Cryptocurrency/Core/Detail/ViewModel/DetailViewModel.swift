@@ -139,6 +139,7 @@ class DetailViewModel: ObservableObject {
     func loadSixMonthData() async {
         do {
             sixMonthData = try await coinDetailService.fetchHistoricalData(days: 180)
+            print("DEBUG: Loaded 6m data - count: \(sixMonthData.count)")
         } catch {
             print("Error loading six month data: \(error)")
         }
