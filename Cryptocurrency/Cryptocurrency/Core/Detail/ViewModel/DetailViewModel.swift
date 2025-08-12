@@ -22,6 +22,7 @@ class DetailViewModel: ObservableObject {
     @Published var dailyData: [Double] = []
     @Published var weeklyData: [Double] = []
     @Published var monthlyData: [Double] = []
+    @Published var threeMonthData: [Double] = []
     @Published var sixMonthData: [Double] = []
     @Published var yearlyData: [Double] = []
     @Published var allTimeData: [Double] = []
@@ -124,6 +125,14 @@ class DetailViewModel: ObservableObject {
             monthlyData = try await coinDetailService.fetchHistoricalData(days: 30)
         } catch {
             print("Error loading monthly data: \(error)")
+        }
+    }
+    
+    func loadThreeMonthData() async {
+        do {
+            threeMonthData = try await coinDetailService.fetchHistoricalData(days: 90)
+        } catch {
+            print("Error loading three month data: \(error)")
         }
     }
     

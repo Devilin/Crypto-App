@@ -11,6 +11,7 @@ enum ChartTimeRange: String, CaseIterable {
     case day1 = "1d"
     case week1 = "1w"
     case month1 = "1m"
+    case month3 = "3m"
     case month6 = "6m"
     case year1 = "1y"
     case all = "All"
@@ -29,6 +30,8 @@ struct ChartView: View {
             return viewModel.weeklyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.weeklyData
         case .month1:
             return viewModel.monthlyData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.monthlyData
+        case .month3:
+            return viewModel.threeMonthData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.threeMonthData
         case .month6:
             return viewModel.sixMonthData.isEmpty ? viewModel.coin.sparklineIn7D?.price ?? [] : viewModel.sixMonthData
         case .year1:
@@ -61,6 +64,8 @@ struct ChartView: View {
             start = end.addingTimeInterval(-7*24*60*60)
         case .month1:
             start = end.addingTimeInterval(-30*24*60*60)
+        case .month3:
+            start = end.addingTimeInterval(-90*24*60*60)
         case .month6:
             start = end.addingTimeInterval(-180*24*60*60)
         case .year1:
@@ -102,6 +107,10 @@ struct ChartView: View {
                         case .month1:
                             Task {
                                 await viewModel.loadMonthlyData()
+                            }
+                        case .month3:
+                            Task {
+                                await viewModel.loadThreeMonthData()
                             }
                         case .month6:
                             Task {
