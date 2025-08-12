@@ -8,9 +8,14 @@
 import SwiftUI
 import Kingfisher
 
+extension Notification.Name {
+    static let chartPriceSelected = Notification.Name("chartPriceSelected")
+}
+
 struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var showFullDescription: Bool = false
+    @State private var selectedPrice: Double? = nil
     private let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -108,7 +113,12 @@ struct DetailView: View {
             }
             
         }
-        .navigationTitle("$\(viewModel.coin.currentPrice.asCurrencyWith6Decimals())")
+        .navigationTitle(selectedPrice != nil ? "$\(selectedPrice!.asCurrencyWith6Decimals())" : "$\(viewModel.coin.currentPrice.asCurrencyWith6Decimals())")
+        .onReceive(NotificationCenter.default.publisher(for: .chartPriceSelected)) { notification in
+            if let price = notification.object as? Double {
+                selectedPrice = price
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack {

@@ -21,6 +21,7 @@ struct ChartView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var percentage: CGFloat = 0
     @State private var selectedRange: ChartTimeRange = .week1
+    @State private var selectedIndex: Int? = nil
     
     private var data: [Double] {
         switch selectedRange {
@@ -93,10 +94,30 @@ struct ChartView: View {
     var body: some View {
         VStack {            
             // Chart view
-            chartView
-                .frame(height: 200)
-                .background(chartBackground)
-                .overlay(chartYAxis.padding(.horizontal, 4), alignment: .leading)
+            ZStack {
+                chartView
+                    .frame(height: 200)
+                    .background(chartBackground)
+                    .overlay(chartYAxis.padding(.horizontal, 4), alignment: .leading)
+                
+                // Interactive vertical line
+                if let selectedIndex = selectedIndex {
+                    Rectangle()
+                        .fill(Color.blue)
+                        .frame(width: 2)
+                        .frame(height: 200)
+                        .position(x: CGFloat(selectedIndex) * 300 / CGFloat(max(1, data.count - 1)), y: 100)
+                }
+            }
+            .onTapGesture { location in
+                let chartWidth: CGFloat = 300
+                let index = Int((location.x / chartWidth) * CGFloat(data.count))
+                if index >= 0 && index < data.count {
+                    selectedIndex = index
+                    // Update navigation title through parent
+                    NotificationCenter.default.post(name: .chartPriceSelected, object: data[index])
+                }
+            }
             
             // Date labels
             chartDateLabels
