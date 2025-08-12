@@ -92,6 +92,16 @@ struct ChartView: View {
     
     var body: some View {
         VStack {
+            // Chart view
+            chartView
+                .frame(height: 200)
+                .background(chartBackground)
+                .overlay(chartYAxis.padding(.horizontal, 4), alignment: .leading)
+            
+            // Date labels
+            chartDateLabels
+                .padding(.horizontal, 4)
+            
             // Time range selector
             HStack(spacing: 16) {
                 ForEach(ChartTimeRange.allCases, id: \.self) { range in
@@ -141,17 +151,7 @@ struct ChartView: View {
                     }
                 }
             }
-            .padding(.bottom, 8)
-            
-            // Chart view
-            chartView
-                .frame(height: 200)
-                .background(chartBackground)
-                .overlay(chartYAxis.padding(.horizontal, 4), alignment: .leading)
-            
-            // Date labels
-            chartDateLabels
-                .padding(.horizontal, 4)
+            .padding(.top, 8)
         }
         .font(.caption)
         .foregroundColor(Color.theme.secondaryText)
