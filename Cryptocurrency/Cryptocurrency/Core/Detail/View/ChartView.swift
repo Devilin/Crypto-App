@@ -91,26 +91,7 @@ struct ChartView: View {
     }
     
     var body: some View {
-        VStack {
-            // Price display
-            VStack(alignment: .leading, spacing: 4) {
-                Text("$\(viewModel.coin.currentPrice.asCurrencyWith6Decimals())")
-                    .font(.title)
-                    .fontWeight(.bold)
-                    .foregroundColor(.primary)
-                
-                HStack {
-                    Text("\(viewModel.coin.priceChangePercentage24H?.asPercentString() ?? "")")
-                        .foregroundColor((viewModel.coin.priceChangePercentage24H ?? 0) >= 0 ? .green : .red)
-                    
-                    Text("Today")
-                        .foregroundColor(.secondary)
-                        .font(.caption)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.horizontal, 4)
-            
+        VStack {            
             // Chart view
             chartView
                 .frame(height: 200)
