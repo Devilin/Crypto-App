@@ -108,7 +108,7 @@ struct DetailView: View {
             }
             
         }
-        .navigationTitle(viewModel.coin.name)
+        .navigationTitle("$\(viewModel.coin.currentPrice.asCurrencyWith6Decimals())")
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 HStack {
