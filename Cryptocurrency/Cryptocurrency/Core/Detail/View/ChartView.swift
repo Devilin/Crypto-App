@@ -109,15 +109,18 @@ struct ChartView: View {
                         .position(x: CGFloat(selectedIndex) * 300 / CGFloat(max(1, data.count - 1)), y: 100)
                 }
             }
-            .onTapGesture { location in
-                let chartWidth: CGFloat = 300
-                let index = Int((location.x / chartWidth) * CGFloat(data.count))
-                if index >= 0 && index < data.count {
-                    selectedIndex = index
-                    // Update navigation title through parent
-                    NotificationCenter.default.post(name: .chartPriceSelected, object: data[index])
-                }
-            }
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        let chartWidth: CGFloat = 300
+                        let index = Int((value.location.x / chartWidth) * CGFloat(data.count))
+                        if index >= 0 && index < data.count {
+                            selectedIndex = index
+                            // Update navigation title through parent
+                            NotificationCenter.default.post(name: .chartPriceSelected, object: data[index])
+                        }
+                    }
+            )
             
             // Date labels
             chartDateLabels
