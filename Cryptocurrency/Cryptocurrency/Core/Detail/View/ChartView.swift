@@ -94,33 +94,35 @@ struct ChartView: View {
     var body: some View {
         VStack {            
             // Chart view
-            ZStack {
-                chartView
-                    .frame(height: 200)
-                    .background(chartBackground)
-                    .overlay(chartYAxis.padding(.horizontal, 4), alignment: .leading)
-                
-                // Interactive vertical line
-                if let selectedIndex = selectedIndex {
-                    Rectangle()
-                        .fill(Color.blue)
-                        .frame(width: 2)
+            GeometryReader { geometry in
+                ZStack {
+                    chartView
                         .frame(height: 200)
-                        .position(x: CGFloat(selectedIndex) * 300 / CGFloat(max(1, data.count - 1)), y: 100)
-                }
-            }
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        let chartWidth: CGFloat = 300
-                        let index = Int((value.location.x / chartWidth) * CGFloat(data.count))
-                        if index >= 0 && index < data.count {
-                            selectedIndex = index
-                            // Update navigation title through parent
-                            NotificationCenter.default.post(name: .chartPriceSelected, object: data[index])
-                        }
+                        .background(chartBackground)
+                        .overlay(chartYAxis.padding(.horizontal, 4), alignment: .leading)
+                    
+                    // Interactive vertical line
+                    if let selectedIndex = selectedIndex {
+                        Rectangle()
+                            .fill(Color.blue)
+                            .frame(width: 2)
+                            .frame(height: 200)
+                            .position(x: CGFloat(selectedIndex) * geometry.size.width / CGFloat(max(1, data.count - 1)), y: 100)
                     }
-            )
+                }
+                .gesture(
+                    DragGesture()
+                        .onChanged { value in
+                            let index = Int((value.location.x / geometry.size.width) * CGFloat(data.count))
+                            if index >= 0 && index < data.count {
+                                selectedIndex = index
+                                // Update navigation title through parent
+                                NotificationCenter.default.post(name: .chartPriceSelected, object: data[index])
+                            }
+                        }
+                )
+            }
+            .frame(height: 200)
             
             // Date labels
             chartDateLabels
