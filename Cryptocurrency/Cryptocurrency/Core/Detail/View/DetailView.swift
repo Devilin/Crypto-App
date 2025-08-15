@@ -35,6 +35,49 @@ struct DetailView: View {
                     .padding(.vertical)
                 
                 VStack(spacing: 20) {
+                    // Summary Section
+                    VStack(alignment: .leading, spacing: 16) {
+                        Text("Summary")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(Color.accent)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        Divider()
+                        
+                        // Price Movement Summary
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Today's Price Movement")
+                                .font(.headline)
+                                .foregroundColor(Color.theme.secondaryText)
+                            
+                            Text("Bitcoin has shown strong momentum today, gaining 3.2% in the last 24 hours. The cryptocurrency broke through key resistance levels at $45,000, supported by increased institutional buying and positive market sentiment. Trading volume has increased by 25% compared to yesterday, indicating strong market participation.")
+                                .font(.callout)
+                                .foregroundColor(Color.theme.secondaryText)
+                                .lineLimit(nil)
+                        }
+                        
+                        // News Highlights
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("News Highlights")
+                                .font(.headline)
+                                .foregroundColor(Color.theme.secondaryText)
+                            
+                            VStack(alignment: .leading, spacing: 6) {
+                                Text("• SEC approves new Bitcoin ETF applications, boosting institutional adoption")
+                                    .font(.callout)
+                                    .foregroundColor(Color.theme.secondaryText)
+                                
+                                Text("• Major banks announce cryptocurrency custody services")
+                                    .font(.callout)
+                                    .foregroundColor(Color.theme.secondaryText)
+                                
+                                Text("• Global regulatory framework discussions gain momentum")
+                                    .font(.callout)
+                                    .foregroundColor(Color.theme.secondaryText)
+                            }
+                        }
+                    }
+                    
                     Text("Overview")
                         .font(.title)
                         .bold()
