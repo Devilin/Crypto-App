@@ -37,7 +37,7 @@ struct DetailView: View {
                 VStack(spacing: 20) {
                     // Summary Section
                     VStack(alignment: .leading, spacing: 16) {
-                        Text("Summary")
+                        Text(getSummaryTitle())
                             .font(.title)
                             .bold()
                             .foregroundColor(Color.accent)
@@ -243,6 +243,21 @@ struct DetailView: View {
                         .frame(width: 25, height: 25)
                 }
             }
+        }
+    }
+    
+    private func getSummaryTitle() -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
+        
+        let currentDate = Date()
+        let calendar = Calendar.current
+        
+        if calendar.isDateInToday(currentDate) {
+            return "Today's Summary"
+        } else {
+            return formatter.string(from: currentDate)
         }
     }
 }
