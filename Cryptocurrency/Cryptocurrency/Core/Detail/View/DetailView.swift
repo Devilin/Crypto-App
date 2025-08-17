@@ -58,9 +58,9 @@ struct DetailView: View {
                         
                         // News Highlights
                         VStack(alignment: .leading, spacing: 8) {
-                            Text("News Highlights")
-                                .font(.headline)
-                                .foregroundColor(Color.theme.secondaryText)
+                            // Text("News Highlights")
+                            //     .font(.headline)
+                            //     .foregroundColor(Color.theme.secondaryText)
                             
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 16) {
