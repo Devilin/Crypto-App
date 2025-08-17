@@ -62,18 +62,87 @@ struct DetailView: View {
                                 .font(.headline)
                                 .foregroundColor(Color.theme.secondaryText)
                             
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text("• SEC approves new Bitcoin ETF applications, boosting institutional adoption")
-                                    .font(.callout)
-                                    .foregroundColor(Color.theme.secondaryText)
-                                
-                                Text("• Major banks announce cryptocurrency custody services")
-                                    .font(.callout)
-                                    .foregroundColor(Color.theme.secondaryText)
-                                
-                                Text("• Global regulatory framework discussions gain momentum")
-                                    .font(.callout)
-                                    .foregroundColor(Color.theme.secondaryText)
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 16) {
+                                    // News Card 1
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        HStack {
+                                            Circle()
+                                                .fill(Color.blue)
+                                                .frame(width: 24, height: 24)
+                                            Text("Reuters")
+                                                .font(.caption)
+                                                .foregroundColor(Color.theme.secondaryText)
+                                        }
+                                        
+                                        Text("SEC approves new Bitcoin ETF applications, boosting institutional adoption")
+                                            .font(.callout)
+                                            .foregroundColor(.primary)
+                                            .lineLimit(3)
+                                            .multilineTextAlignment(.leading)
+                                        
+                                        Text("2 hours ago")
+                                            .font(.caption2)
+                                            .foregroundColor(Color.theme.secondaryText)
+                                    }
+                                    .frame(width: 280, height: 120)
+                                    .padding(12)
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(12)
+                                    
+                                    // News Card 2
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        HStack {
+                                            Circle()
+                                                .fill(Color.green)
+                                                .frame(width: 24, height: 24)
+                                            Text("Bloomberg")
+                                                .font(.caption)
+                                                .foregroundColor(Color.theme.secondaryText)
+                                        }
+                                        
+                                        Text("Major banks announce cryptocurrency custody services for institutional clients")
+                                            .font(.callout)
+                                            .foregroundColor(.primary)
+                                            .lineLimit(3)
+                                            .multilineTextAlignment(.leading)
+                                        
+                                        Text("4 hours ago")
+                                            .font(.caption2)
+                                            .foregroundColor(Color.theme.secondaryText)
+                                    }
+                                    .frame(width: 280, height: 120)
+                                    .padding(12)
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(12)
+                                    
+                                    // News Card 3
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        HStack {
+                                            Circle()
+                                                .fill(Color.orange)
+                                                .frame(width: 24, height: 24)
+                                            Text("CNBC")
+                                                .font(.caption)
+                                                .foregroundColor(Color.theme.secondaryText)
+                                        }
+                                        
+                                        Text("Global regulatory framework discussions gain momentum in G20 summit")
+                                            .font(.callout)
+                                            .foregroundColor(.primary)
+                                            .lineLimit(3)
+                                            .multilineTextAlignment(.leading)
+                                        
+                                        Text("6 hours ago")
+                                            .font(.caption2)
+                                            .foregroundColor(Color.theme.secondaryText)
+                                    }
+                                    .frame(width: 280, height: 120)
+                                    .padding(12)
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(12)
+                                }
+                                .padding(.horizontal, 4)
                             }
                         }
                     }
