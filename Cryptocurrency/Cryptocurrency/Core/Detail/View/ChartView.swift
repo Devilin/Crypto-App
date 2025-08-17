@@ -116,8 +116,14 @@ struct ChartView: View {
                             let index = Int((value.location.x / geometry.size.width) * CGFloat(data.count))
                             if index >= 0 && index < data.count {
                                 selectedIndex = index
-                                // Update navigation title through parent
-                                NotificationCenter.default.post(name: .chartPriceSelected, object: data[index])
+                                // Calculate timestamp for selected index
+                                let totalDuration = endingDate.timeIntervalSince(startingDate)
+                                let timePerPoint = totalDuration / Double(max(1, data.count - 1))
+                                let selectedTimestamp = startingDate.addingTimeInterval(timePerPoint * Double(index))
+                                
+                                // Send both price and timestamp
+                                let chartData = (price: data[index], timestamp: selectedTimestamp)
+                                NotificationCenter.default.post(name: .chartPriceSelected, object: chartData)
                             }
                         }
                 )

@@ -16,6 +16,7 @@ struct DetailView: View {
     @StateObject var viewModel: DetailViewModel
     @State private var showFullDescription: Bool = false
     @State private var selectedPrice: Double? = nil
+    @State private var selectedTimestamp: Date? = nil
     private let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -227,8 +228,9 @@ struct DetailView: View {
         }
         .navigationTitle(selectedPrice != nil ? "$\(selectedPrice!.asCurrencyWith6Decimals())" : "$\(viewModel.coin.currentPrice.asCurrencyWith6Decimals())")
         .onReceive(NotificationCenter.default.publisher(for: .chartPriceSelected)) { notification in
-            if let price = notification.object as? Double {
-                selectedPrice = price
+            if let chartData = notification.object as? (price: Double, timestamp: Date) {
+                selectedPrice = chartData.price
+                selectedTimestamp = chartData.timestamp
             }
         }
         .toolbar {
@@ -251,13 +253,14 @@ struct DetailView: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         
-        let currentDate = Date()
+        // Use selected timestamp from chart if available, otherwise use current date
+        let dateToUse = selectedTimestamp ?? Date()
         let calendar = Calendar.current
         
-        if calendar.isDateInToday(currentDate) {
+        if calendar.isDateInToday(dateToUse) {
             return "Today's Summary"
         } else {
-            return formatter.string(from: currentDate)
+            return formatter.string(from: dateToUse)
         }
     }
 }
